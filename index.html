@@ -4,170 +4,238 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tablero de gestión escolar · I.E. Haydeé Camacho Saavedra</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 /* ============================================================
-   Tablero de gestión escolar · I.E. Haydeé Camacho Saavedra
-   Hoja de estilos — BI Consulting Lab
+   Tablero de gestión escolar — I.E. Haydeé Camacho Saavedra
+   Togüí, Boyacá · Tema verde institucional · BI Consulting Lab
    ============================================================ */
 :root{
-  --fondo:#F4F6F2; --superficie:#FFFFFF; --tinta:#15261B; --tinta-suave:#5B6B60;
+  --fondo:#F4F6F2; --panel:#FFFFFF; --panel-2:#EDF3EE; --borde:#E2E7E0;
+  --tinta:#15261B; --tinta-suave:#5B6B60;
   --verde:#1E6E45; --verde-oscuro:#0D3B25; --verde-claro:#E3F0E8;
   --ambar:#B97417; --ambar-claro:#FBF1DF;
   --rojo:#B3362B; --rojo-claro:#FBE9E6;
-  --azul:#2F6B8E; --borde:#E2E7E0;
+  --azul:#2F6B8E; --azul-claro:#E8F0F5;
 }
 *{box-sizing:border-box}
+html,body{height:100%}
 body{
-  margin:0; background:var(--fondo); color:var(--tinta);
+  margin:0;background:var(--fondo);color:var(--tinta);
   font-family:'Segoe UI','Helvetica Neue',Arial,system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;
+  display:flex;min-height:100vh;
 }
-header{background:var(--verde-oscuro); color:#fff; padding:26px 22px 0}
-.wrap{max-width:1180px; margin:0 auto}
-.head-row{display:flex; flex-wrap:wrap; align-items:center; gap:14px}
-.logo{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.12);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px}
-.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9CC7AE;font-weight:700}
-h1{margin:2px 0 0;font-size:clamp(18px,3.5vw,26px);font-weight:800;letter-spacing:-.01em}
-.addr{font-size:12.5px;color:#BBD9C7;margin-top:2px}
-nav{display:flex;gap:4px;margin-top:20px}
-nav button{
-  display:flex;align-items:center;gap:8px;background:transparent;color:#BBD9C7;
-  border:none;border-radius:12px 12px 0 0;padding:12px 18px;font-size:13.5px;
-  font-weight:700;cursor:pointer;font-family:inherit;
+/* ---------- Menú lateral ---------- */
+aside{
+  width:240px;flex-shrink:0;background:linear-gradient(180deg,#0E4129 0%,#0A2E1D 100%);
+  display:flex;flex-direction:column;position:sticky;top:0;height:100vh;color:#fff;
 }
-nav button.activa{background:var(--fondo);color:var(--verde-oscuro)}
-nav button:focus-visible{outline:2px solid #fff;outline-offset:-2px}
-main{max-width:1180px;margin:0 auto;padding:20px 22px 48px;display:grid;gap:16px}
-.card{background:var(--superficie);border:1px solid var(--borde);border-radius:14px;
-  padding:18px 20px;box-shadow:0 1px 2px rgba(21,38,27,.04)}
-.card h3{margin:0 0 4px;font-size:15px;font-weight:700;letter-spacing:-.01em}
-.card .sub{margin:0 0 14px;font-size:12.5px;color:var(--tinta-suave)}
-.borde-rojo{border-left:4px solid var(--rojo)}
-.borde-ambar{border-left:4px solid var(--ambar)}
-.borde-verde-top{border-top:4px solid var(--verde)}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
-.kpi{display:flex;gap:14px;align-items:flex-start}
-.kpi .icono{border-radius:10px;padding:9px;font-size:18px;line-height:1;flex-shrink:0}
-.kpi .etiqueta{font-size:11.5px;font-weight:600;color:var(--tinta-suave);text-transform:uppercase;letter-spacing:.05em}
-.kpi .valor{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
-.kpi .detalle{font-size:12px;color:var(--tinta-suave);margin-top:2px}
+.marca{padding:24px 20px 18px;border-bottom:1px solid rgba(255,255,255,.12)}
+.emblema{font-size:24px;line-height:1}
+.marca .eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#9CC7AE;font-weight:700;margin-top:10px}
+.marca h1{margin:4px 0 0;font-size:15.5px;font-weight:800;letter-spacing:-.01em;line-height:1.3;color:#fff}
+.marca .lugar{font-size:11.5px;color:#BBD9C7;margin-top:4px}
+.menu{padding:14px 10px;display:flex;flex-direction:column;gap:4px}
+.menu button{
+  display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+  background:transparent;border:none;border-left:3px solid transparent;
+  color:#BBD9C7;padding:11px 14px;border-radius:0 10px 10px 0;
+  font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;
+}
+.menu button:hover{background:rgba(255,255,255,.08);color:#fff}
+.menu button.activa{background:rgba(255,255,255,.12);color:#fff;border-left-color:#7FCFA0}
+.menu .icono{font-size:16px;width:20px;text-align:center}
+.pie-menu{margin-top:auto;padding:16px 20px;border-top:1px solid rgba(255,255,255,.12);
+  font-size:10.5px;color:#9CC7AE;line-height:1.6}
+.pie-menu b{color:#fff}
+/* ---------- Contenido ---------- */
+main{flex:1;padding:26px 28px 56px;min-width:0;max-width:1100px}
+.cabecera-seccion{margin-bottom:20px}
+.cabecera-seccion .eyebrow{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--verde);font-weight:700}
+.cabecera-seccion h2{margin:4px 0 4px;font-size:clamp(19px,3vw,25px);font-weight:800;letter-spacing:-.01em}
+.cabecera-seccion p{margin:0;font-size:13px;color:var(--tinta-suave)}
+section{display:none}
+section.visible{display:grid;gap:16px}
+.card{background:var(--panel);border:1px solid var(--borde);border-radius:14px;padding:18px 20px;
+  box-shadow:0 1px 2px rgba(21,38,27,.04)}
+.card h3{margin:0 0 4px;font-size:14.5px;font-weight:700}
+.card .sub{margin:0 0 14px;font-size:12px;color:var(--tinta-suave)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px}
+.kpi .etiqueta{font-size:10.5px;font-weight:700;color:var(--tinta-suave);text-transform:uppercase;letter-spacing:.08em}
+.kpi .valor{font-size:25px;font-weight:800;letter-spacing:-.02em;margin-top:5px}
+.kpi .detalle{font-size:11.5px;color:var(--tinta-suave);margin-top:3px}
+.kpi.verde .valor{color:var(--verde)}
+.kpi.rojo .valor{color:var(--rojo)}
+.kpi.ambar .valor{color:var(--ambar)}
+.kpi.azul .valor{color:var(--azul)}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
-.filtros{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.filtros .lbl{font-size:13px;font-weight:600;color:var(--tinta-suave)}
-.chip{border:1px solid var(--borde);background:var(--superficie);color:var(--tinta);
-  border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.filtros{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filtros .lbl{font-size:12.5px;font-weight:600;color:var(--tinta-suave)}
+.chip{border:1px solid var(--borde);background:var(--panel);color:var(--tinta);
+  border-radius:999px;padding:6px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.chip:hover{background:var(--panel-2)}
 .chip.activa{border-color:var(--verde);background:var(--verde);color:#fff}
-.chip-sm{padding:5px 12px;font-size:12px}
-.pill{border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:600;white-space:nowrap;display:inline-block}
+.chip-sm{padding:5px 12px;font-size:11.5px}
+.pill{border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700;white-space:nowrap;display:inline-block}
 .pill.ok{background:var(--verde-claro);color:var(--verde-oscuro)}
 .pill.warn{background:var(--ambar-claro);color:#7A4D0E}
 .pill.bad{background:var(--rojo-claro);color:#7A241C}
 .pill.neutral{background:#EEF1ED;color:var(--tinta-suave)}
-table{width:100%;border-collapse:collapse;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
 thead tr{border-bottom:2px solid var(--borde);text-align:left;color:var(--tinta-suave);
-  font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.06em}
 th,td{padding:8px 6px}
 tbody tr{border-bottom:1px solid var(--borde)}
 tbody tr.clic{cursor:pointer}
-tbody tr.clic:hover{background:#F0F4EF}
+tbody tr.clic:hover{background:var(--panel-2)}
 tbody tr.sel{background:var(--verde-claro)}
 .scroll-x{overflow-x:auto}
-.alerta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--rojo-claro);
-  border:1px solid #F0CFCA;border-radius:10px;padding:10px 14px;width:100%;
-  text-align:left;font-family:inherit;font-size:13.5px;cursor:default;color:var(--tinta)}
-button.alerta{cursor:pointer}
-button.alerta:hover{filter:brightness(.98)}
+.alerta-item{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-radius:10px;
+  padding:10px 14px;width:100%;text-align:left;font-family:inherit;font-size:13px;
+  border:1px solid transparent;color:var(--tinta)}
+.alerta-item.roja{background:var(--rojo-claro);border-color:#F0CFCA}
+.alerta-item.ambar{background:var(--ambar-claro);border-color:#EFD9B4}
+button.alerta-item{cursor:pointer}
+button.alerta-item:hover{filter:brightness(.98)}
 .alertas-lista{display:grid;gap:8px}
-.titulo-alerta{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-.titulo-alerta h3{margin:0}
-.rec{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;
-  border-radius:10px;padding:10px 14px}
+.titulo-icono{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.titulo-icono h3{margin:0}
+.rec{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.55;border-radius:10px;padding:10px 14px}
 .rec.critico{background:var(--rojo-claro)}
 .rec.atencion{background:var(--ambar-claro)}
 .rec.ok{background:var(--verde-claro)}
-.cuadro-pago{display:inline-block;width:14px;height:14px;border-radius:4px}
+.cuadro-pago{display:inline-block;width:13px;height:13px;border-radius:4px}
 .derecha{margin-left:auto}
-.tend{display:inline-flex;align-items:center;gap:4px;font-weight:600;font-size:12.5px}
+.tend{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:12px}
 .grafico{position:relative;width:100%}
 canvas{max-width:100%}
-.cerrar{border:1px solid var(--borde);background:#fff;border-radius:8px;padding:5px 12px;
-  font-size:12.5px;cursor:pointer;font-family:inherit;color:var(--tinta-suave)}
+.cerrar{border:1px solid var(--borde);background:var(--panel);border-radius:8px;
+  padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit;color:var(--tinta-suave)}
 .oculto{display:none}
-@media (max-width:560px){
-  th,td{padding:7px 4px}
-  main{padding:16px 12px 40px}
-  header{padding:20px 14px 0}
+/* Mapa de calor grado × materia */
+.heat td{padding:0}
+.heat .celda{display:block;text-align:center;padding:10px 4px;font-weight:800;font-size:12.5px;border-radius:6px;margin:2px}
+.heat th{font-size:10px}
+.atajo{border:1px dashed var(--borde);background:transparent;color:var(--azul);
+  border-radius:10px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.atajo:hover{background:var(--panel-2)}
+button:focus-visible{outline:2px solid var(--verde);outline-offset:1px}
+@media (max-width:760px){
+  body{flex-direction:column}
+  aside{width:100%;height:auto;position:static}
+  .menu{flex-direction:row;overflow-x:auto;padding:8px 10px}
+  .menu button{border-left:none;border-bottom:3px solid transparent;border-radius:10px 10px 0 0;white-space:nowrap}
+  .menu button.activa{border-left:none;border-bottom-color:#7FCFA0}
+  .pie-menu{display:none}
+  main{padding:18px 14px 44px}
 }
-
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
-<header>
-  <div class="wrap">
-    <div class="head-row">
-      <div class="logo">📘</div>
-      <div>
-        <div class="eyebrow">Tablero de gestión escolar · 2026</div>
-        <h1>I.E. Haydeé Camacho Saavedra</h1>
-        <div class="addr">Cl. 2 #5-59, Togüí, Boyacá · Datos de demostración — BI Consulting Lab</div>
-      </div>
-    </div>
-    <nav>
-      <button id="tab-academico" class="activa" onclick="cambiarTab('academico')">🎓 Rendimiento académico</button>
-      <button id="tab-finanzas" onclick="cambiarTab('finanzas')">💰 Finanzas y cartera</button>
-    </nav>
+<aside>
+  <div class="marca">
+    <div class="emblema">📘</div>
+    <div class="eyebrow">Tablero de gestión escolar · 2026</div>
+    <h1>I.E. Haydeé Camacho Saavedra</h1>
+    <div class="lugar">Cl. 2 #5-59, Togüí, Boyacá</div>
   </div>
-</header>
+  <nav class="menu" aria-label="Secciones">
+    <button id="nav-resumen" class="activa" onclick="irA('resumen')"><span class="icono">🏫</span> Resumen general</button>
+    <button id="nav-academico" onclick="irA('academico')"><span class="icono">🎓</span> Académico</button>
+    <button id="nav-finanzas" onclick="irA('finanzas')"><span class="icono">💰</span> Finanzas y cartera</button>
+    <button id="nav-inventario" onclick="irA('inventario')"><span class="icono">📦</span> Uniformes e inventario</button>
+  </nav>
+  <div class="pie-menu">
+    Tablero demo construido por <b>BI Consulting Lab</b>.<br>
+    Datos de demostración ficticios.
+  </div>
+</aside>
 
 <main>
-  <!-- ============ PESTAÑA ACADÉMICA ============ -->
-  <section id="vista-academico" style="display:grid;gap:16px">
+  <!-- ================= RESUMEN ================= -->
+  <section id="sec-resumen" class="visible">
+    <div class="cabecera-seccion">
+      <div class="eyebrow">Vista ejecutiva</div>
+      <h2>Resumen general</h2>
+      <p>Lo más importante de las áreas académica, financiera y de inventario, en una sola vista.</p>
+    </div>
+    <div class="kpis" id="kpis-resumen"></div>
+    <div class="grid2">
+      <div class="card">
+        <h3>Progreso académico del año</h3>
+        <p class="sub">Promedio por periodo, una línea por grado</p>
+        <div class="grafico" style="height:230px"><canvas id="ch-res-evolucion"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Recaudo del año</h3>
+        <p class="sub">Pagos recibidos vs. pendientes por mes</p>
+        <div class="grafico" style="height:230px"><canvas id="ch-res-recaudo"></canvas></div>
+      </div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--verde)">
+      <div class="titulo-icono"><span>🔔</span><h3>Alertas que requieren atención hoy</h3></div>
+      <p class="sub">Consolidado de las tres áreas, ordenado por urgencia</p>
+      <div class="alertas-lista" id="feed-alertas"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+        <button class="atajo" onclick="irA('academico')">Ver detalle académico →</button>
+        <button class="atajo" onclick="irA('finanzas')">Ver cartera completa →</button>
+        <button class="atajo" onclick="irA('inventario')">Ver inventario →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ACADÉMICO ================= -->
+  <section id="sec-academico">
+    <div class="cabecera-seccion">
+      <div class="eyebrow">Sección académica</div>
+      <h2>Rendimiento académico</h2>
+      <p>Notas por estudiante, grado y materia · escala 1.0 a 5.0, mínimo aprobatorio 3.0.</p>
+    </div>
     <div class="filtros" id="filtros-grado"><span class="lbl">Grado:</span></div>
     <div class="kpis" id="kpis-academico"></div>
 
+    <div class="card">
+      <h3>Mapa de calor: grado × materia</h3>
+      <p class="sub">Cada celda es el promedio acumulado del grado en la materia. Verde = sobresaliente, azul = estable, rojo = en riesgo. Toca una fila para filtrar el grado.</p>
+      <div class="scroll-x"><table class="heat" id="heatmap" style="min-width:680px"></table></div>
+    </div>
+
     <div class="grid2">
       <div class="card">
-        <h3>Promedio por grado</h3>
-        <p class="sub">Comparativo institucional · año 2026</p>
-        <div class="grafico" style="height:220px"><canvas id="ch-grados"></canvas></div>
+        <h3>Progreso en el año</h3>
+        <p class="sub" id="sub-evolucion"></p>
+        <div class="grafico" style="height:225px"><canvas id="ch-evolucion"></canvas></div>
       </div>
       <div class="card">
-        <h3>Progreso en el año</h3>
-        <p class="sub" id="sub-evolucion">Promedio por periodo académico</p>
-        <div class="grafico" style="height:220px"><canvas id="ch-evolucion"></canvas></div>
+        <h3>Rendimiento por materia</h3>
+        <p class="sub">Del grupo filtrado, ordenado de menor a mayor</p>
+        <div class="grafico" style="height:225px"><canvas id="ch-materias"></canvas></div>
       </div>
     </div>
 
-    <div class="card">
-      <h3>Rendimiento por materia</h3>
-      <p class="sub">Ordenado de menor a mayor — las primeras barras indican dónde reforzar</p>
-      <div class="grafico" style="height:280px"><canvas id="ch-materias"></canvas></div>
-    </div>
-
-    <div class="card borde-rojo">
-      <div class="titulo-alerta"><span>🔔</span><h3>Alertas: riesgo de perder materias</h3></div>
+    <div class="card" style="border-left:4px solid var(--rojo)">
+      <div class="titulo-icono"><span>⚠️</span><h3>Alertas: riesgo de perder materias</h3></div>
       <p class="sub">Estudiantes con promedio acumulado inferior a 3.0 en una o más materias</p>
       <div class="alertas-lista" id="alertas-academicas"></div>
     </div>
 
     <div class="card">
       <h3 id="titulo-lista">Estudiantes</h3>
-      <p class="sub">Toca un estudiante para ver su detalle completo, comparativos y recomendaciones</p>
+      <p class="sub">Toca un estudiante para abrir su ficha con notas, comparativos y plan de mejora</p>
       <div class="scroll-x"><table id="tabla-estudiantes" style="min-width:560px">
         <thead><tr><th>Estudiante</th><th>Grado</th><th>Promedio</th><th>Tendencia</th><th>Estado</th></tr></thead>
         <tbody></tbody>
       </table></div>
     </div>
 
-    <div class="card borde-verde-top oculto" id="detalle-estudiante">
+    <div class="card oculto" id="detalle-estudiante" style="border-top:4px solid var(--verde)">
       <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px">
-        <h3 id="det-nombre" style="font-size:18px"></h3>
+        <h3 id="det-nombre" style="font-size:17.5px"></h3>
         <span class="pill neutral" id="det-grado"></span>
         <span class="pill" id="det-prom"></span>
-        <button class="cerrar derecha" onclick="cerrarDetalle()">Cerrar</button>
+        <button class="cerrar derecha" onclick="cerrarDetalle()">Cerrar ficha</button>
       </div>
       <div class="scroll-x" style="margin-top:14px"><table id="det-notas" style="min-width:480px">
         <thead><tr><th>Materia</th><th>P1</th><th>P2</th><th>P3</th><th>Acum.</th><th>Estado</th></tr></thead>
@@ -177,35 +245,40 @@ canvas{max-width:100%}
         <div>
           <h3>Progreso vs. su grado</h3>
           <p class="sub" id="det-sub-evol"></p>
-          <div class="grafico" style="height:210px"><canvas id="ch-det-evolucion"></canvas></div>
+          <div class="grafico" style="height:215px"><canvas id="ch-det-evolucion"></canvas></div>
         </div>
         <div>
           <h3>Comparación por materia</h3>
-          <p class="sub">Acumulado del estudiante frente al grado</p>
-          <div class="grafico" style="height:210px"><canvas id="ch-det-materias"></canvas></div>
+          <p class="sub">Acumulado del estudiante frente al promedio de su grado</p>
+          <div class="grafico" style="height:215px"><canvas id="ch-det-materias"></canvas></div>
         </div>
       </div>
       <div style="margin-top:16px">
-        <h3 style="margin:0 0 8px;font-size:15px">Qué debe mejorar</h3>
+        <h3 style="margin:0 0 8px;font-size:14.5px">Plan de mejora sugerido</h3>
         <div class="alertas-lista" id="det-recomendaciones"></div>
       </div>
     </div>
   </section>
 
-  <!-- ============ PESTAÑA FINANZAS ============ -->
-  <section id="vista-finanzas" style="display:none;gap:16px">
+  <!-- ================= FINANZAS ================= -->
+  <section id="sec-finanzas">
+    <div class="cabecera-seccion">
+      <div class="eyebrow">Sección financiera</div>
+      <h2>Finanzas y cartera</h2>
+      <p>Estado de pagos por familia, recaudo mensual y prioridades de cobro.</p>
+    </div>
     <div class="kpis" id="kpis-finanzas"></div>
 
-    <div class="card borde-rojo">
-      <div class="titulo-alerta"><span>🔔</span><h3>Cobro prioritario: 3 o más meses sin pagar</h3></div>
-      <p class="sub">Familias que requieren gestión de cartera inmediata (llamada, acuerdo de pago o citación)</p>
+    <div class="card" style="border-left:4px solid var(--rojo)">
+      <div class="titulo-icono"><span>📣</span><h3>Cobro prioritario: 3 o más meses en mora</h3></div>
+      <p class="sub">Familias que requieren gestión inmediata: llamada, acuerdo de pago o citación</p>
       <div class="alertas-lista" id="alertas-cobro"></div>
     </div>
 
     <div class="card">
       <h3>Recaudo vs. pendiente por mes</h3>
-      <p class="sub">Valor mensual por estudiante: $65.000 (dato demo)</p>
-      <div class="grafico" style="height:240px"><canvas id="ch-recaudo"></canvas></div>
+      <p class="sub">Valor mensual por estudiante: $65.000 (dato demo) · la línea verde oscura marca la trayectoria del recaudo</p>
+      <div class="grafico" style="height:245px"><canvas id="ch-recaudo"></canvas></div>
     </div>
 
     <div class="card">
@@ -214,7 +287,7 @@ canvas{max-width:100%}
         <div class="derecha" style="display:flex;gap:6px;flex-wrap:wrap" id="filtros-pago"></div>
       </div>
       <p class="sub">Verde = mes pagado · rojo = mes pendiente</p>
-      <div class="scroll-x"><table id="tabla-pagos" style="min-width:640px">
+      <div class="scroll-x"><table id="tabla-pagos" style="min-width:660px">
         <thead><tr><th>Estudiante</th><th>Grado</th>
           <th style="text-align:center">Feb</th><th style="text-align:center">Mar</th>
           <th style="text-align:center">Abr</th><th style="text-align:center">May</th>
@@ -222,22 +295,36 @@ canvas{max-width:100%}
         <tbody></tbody>
       </table></div>
     </div>
+  </section>
 
+  <!-- ================= INVENTARIO ================= -->
+  <section id="sec-inventario">
+    <div class="cabecera-seccion">
+      <div class="eyebrow">Sección de inventario</div>
+      <h2>Uniformes e inventario</h2>
+      <p>Ventas del año, existencias en bodega y alertas de reposición.</p>
+    </div>
+    <div class="kpis" id="kpis-inventario"></div>
     <div class="grid2">
       <div class="card">
-        <div class="titulo-alerta"><span>🛍️</span><h3>Uniformes: vendidos vs. bodega</h3></div>
+        <h3>Vendidos vs. bodega por referencia</h3>
         <p class="sub">Año 2026</p>
-        <div class="grafico" style="height:260px"><canvas id="ch-uniformes"></canvas></div>
+        <div class="grafico" style="height:250px"><canvas id="ch-uniformes"></canvas></div>
       </div>
-      <div class="card borde-ambar">
-        <div class="titulo-alerta"><span>📦</span><h3>Inventario y alertas de stock</h3></div>
-        <p class="sub">Referencias por debajo del mínimo recomendado requieren reposición</p>
-        <table id="tabla-uniformes">
-          <thead><tr><th>Referencia</th><th style="text-align:right">Bodega</th>
-            <th style="text-align:right">Mínimo</th><th>Estado</th></tr></thead>
-          <tbody></tbody>
-        </table>
+      <div class="card">
+        <h3>Distribución de la bodega</h3>
+        <p class="sub">Participación de cada referencia en las existencias actuales</p>
+        <div class="grafico" style="height:250px"><canvas id="ch-bodega"></canvas></div>
       </div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--ambar)">
+      <div class="titulo-icono"><span>📦</span><h3>Existencias y alertas de reposición</h3></div>
+      <p class="sub">Referencias por debajo del mínimo recomendado requieren pedido al proveedor</p>
+      <table id="tabla-uniformes">
+        <thead><tr><th>Referencia</th><th style="text-align:right">Vendidos</th><th style="text-align:right">Bodega</th>
+          <th style="text-align:right">Mínimo</th><th>Estado</th></tr></thead>
+        <tbody></tbody>
+      </table>
     </div>
   </section>
 </main>
@@ -245,27 +332,15 @@ canvas{max-width:100%}
 <script>
 /* ============================================================
    DATOS SIMULADOS (DEMO) — reemplazar por la fuente real
-   ------------------------------------------------------------
-   Para conectar datos reales: sustituya ESTUDIANTES y UNIFORMES
-   manteniendo la misma estructura. El resto del tablero (app.js)
-   se actualiza automáticamente.
+   I.E. Haydeé Camacho Saavedra · Togüí, Boyacá
    ============================================================ */
-
 const GRADOS = ["6°","7°","8°","9°","10°","11°"];
 const MATERIAS = ["Matemáticas","Lengua Castellana","Inglés","Ciencias Naturales","Sociales","Ed. Física","Artística","Tecnología"];
 const PERIODOS = ["P1","P2","P3"];
 const MESES = ["Febrero","Marzo","Abril","Mayo","Junio"];
-const VALOR_MES = 65000; // valor del pago mensual por estudiante (COP)
+const VALOR_MES = 65000;
 
-/* Generador aleatorio con semilla: los datos demo son estables entre recargas */
-function mulberry32(a){
-  return function(){
-    a|=0; a=(a+0x6d2b79f5)|0;
-    let t=Math.imul(a^(a>>>15),1|a);
-    t=(t+Math.imul(t^(t>>>7),61|t))^t;
-    return((t^(t>>>14))>>>0)/4294967296;
-  };
-}
+function mulberry32(a){return function(){a|=0;a=(a+0x6d2b79f5)|0;let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};}
 const rng = mulberry32(20260612);
 
 const NOMBRES = ["Sofía Ramírez","Juan David Pérez","Valentina Castro","Samuel Gómez","Mariana Torres",
@@ -275,79 +350,49 @@ const NOMBRES = ["Sofía Ramírez","Juan David Pérez","Valentina Castro","Samue
 "Manuela Buitrago","Felipe Sierra","Juliana Parra","Martín Velásquez","Paula Chacón",
 "Sebastián Niño","Laura Camargo","David Forero","María José Ávila","Alejandro Cely"];
 
-/* --- Variación por grado y periodo ---
-   Cada grado tiene un "clima" propio por periodo (un P2 difícil,
-   un P3 de recuperación, etc.), para que las líneas de progreso
-   suban y bajen en lugar de ser planas. */
+/* Variación por grado/periodo y materia/periodo para que las
+   trayectorias suban y bajen de forma realista */
 const EFECTO_GRADO_PERIODO = {};
-GRADOS.forEach(g => {
-  EFECTO_GRADO_PERIODO[g] = PERIODOS.map(() => (rng() - 0.5) * 0.55);
-});
-
-/* --- Variación por materia y periodo ---
-   Algunas materias tienen periodos especialmente duros o suaves
-   a nivel institucional (un parcial difícil, un proyecto que subió notas). */
+GRADOS.forEach(g => { EFECTO_GRADO_PERIODO[g] = PERIODOS.map(() => (rng()-0.5)*0.55); });
 const EFECTO_MATERIA_PERIODO = {};
-MATERIAS.forEach(m => {
-  EFECTO_MATERIA_PERIODO[m] = PERIODOS.map(() => (rng() - 0.5) * 0.45);
-});
+MATERIAS.forEach(m => { EFECTO_MATERIA_PERIODO[m] = PERIODOS.map(() => (rng()-0.5)*0.45); });
 
 const ESTUDIANTES = (function(){
   const out = []; let idx = 0;
   GRADOS.forEach(grado => {
-    for(let s = 0; s < 5; s++){
+    for(let s=0; s<5; s++){
       const nombre = NOMBRES[idx];
-      const habilidad = 2.6 + rng() * 2.1;            // capacidad base 2.6 – 4.7
-      const tendencia = (rng() - 0.5) * 0.55;         // mejora o decae de forma sostenida
-
-      /* Curva personal: altibajos propios del estudiante en cada
-         periodo (un mal P2, una recuperación en P3, etc.) */
-      const curvaPersonal = PERIODOS.map(() => (rng() - 0.5) * 0.7);
-
+      const habilidad = 2.6 + rng()*2.1;
+      const tendencia = (rng()-0.5)*0.55;
+      const curva = PERIODOS.map(() => (rng()-0.5)*0.7);
       const notas = {};
       MATERIAS.forEach(m => {
-        const afinidad = (rng() - 0.5) * 1.0;
-        notas[m] = PERIODOS.map((_, p) => {
-          let n = habilidad
-            + afinidad
-            + tendencia * p                       // tendencia sostenida
-            + curvaPersonal[p]                    // altibajo personal del periodo
-            + EFECTO_GRADO_PERIODO[grado][p]      // clima del grado en ese periodo
-            + EFECTO_MATERIA_PERIODO[m][p]        // dificultad de la materia ese periodo
-            + (rng() - 0.5) * 0.6;                // ruido de cada nota
-          if(m === "Ed. Física" || m === "Artística") n += 0.4;
-          return Math.round(Math.min(5, Math.max(1, n)) * 10) / 10;
+        const afinidad = (rng()-0.5)*1.0;
+        notas[m] = PERIODOS.map((_,p) => {
+          let n = habilidad + afinidad + tendencia*p + curva[p]
+            + EFECTO_GRADO_PERIODO[grado][p] + EFECTO_MATERIA_PERIODO[m][p]
+            + (rng()-0.5)*0.6;
+          if(m==="Ed. Física"||m==="Artística") n += 0.4;
+          return Math.round(Math.min(5,Math.max(1,n))*10)/10;
         });
       });
-
-      /* --- Pagos con patrones variados ---
-         No solo "pagó hasta X mes": hay familias que fallan meses
-         intermedios y se ponen al día, para que el recaudo mensual
-         suba y baje de forma realista. */
       const perfil = rng();
       let pagos;
       if(perfil > 0.5){
-        // Al día todo el año
         pagos = MESES.map(mes => ({mes, estado:"pagado"}));
       } else if(perfil > 0.32){
-        // Falla un mes aleatorio (a veces intermedio, a veces el último)
-        const falla = Math.floor(rng() * MESES.length);
-        pagos = MESES.map((mes,i) => ({mes, estado: i === falla ? "pendiente" : "pagado"}));
+        const f = Math.floor(rng()*MESES.length);
+        pagos = MESES.map((mes,i)=>({mes, estado: i===f?"pendiente":"pagado"}));
       } else if(perfil > 0.16){
-        // Falla dos meses no necesariamente consecutivos
-        const f1 = Math.floor(rng() * MESES.length);
-        let f2 = Math.floor(rng() * MESES.length);
-        if(f2 === f1) f2 = (f2 + 2) % MESES.length;
-        pagos = MESES.map((mes,i) => ({mes, estado: (i === f1 || i === f2) ? "pendiente" : "pagado"}));
+        const f1 = Math.floor(rng()*MESES.length);
+        let f2 = Math.floor(rng()*MESES.length); if(f2===f1) f2=(f2+2)%MESES.length;
+        pagos = MESES.map((mes,i)=>({mes, estado:(i===f1||i===f2)?"pendiente":"pagado"}));
       } else {
-        // Mora crítica: 3 a 4 meses sin pagar, concentrados en los recientes
-        const deuda = 3 + Math.floor(rng() * 2);
-        pagos = MESES.map((mes,i) => ({mes, estado: i >= MESES.length - deuda ? "pendiente" : "pagado"}));
-        // Con algo de suerte pagó un mes suelto en medio de la mora
-        if(rng() > 0.6 && deuda === 4) pagos[MESES.length - 2].estado = "pagado";
+        const deuda = 3 + Math.floor(rng()*2);
+        pagos = MESES.map((mes,i)=>({mes, estado: i>=MESES.length-deuda?"pendiente":"pagado"}));
+        if(rng()>0.6 && deuda===4) pagos[MESES.length-2].estado = "pagado";
       }
-
-      out.push({id: idx + 1, nombre, grado, notas, pagos});
+      out.push({id:idx+1, nombre, grado, notas, pagos});
       idx++;
     }
   });
@@ -364,11 +409,8 @@ const UNIFORMES = [
 ];
 
 /* ============================================================
-   Tablero de gestión escolar — lógica y gráficos
-   I.E. Haydeé Camacho Saavedra · BI Consulting Lab
+   UTILIDADES Y LÓGICA
    ============================================================ */
-
-/* ============ Utilidades ============ */
 const prom = a => a.reduce((x,y)=>x+y,0)/a.length;
 const r1 = n => Math.round(n*10)/10;
 const cop = n => "$"+n.toLocaleString("es-CO");
@@ -397,12 +439,10 @@ function recomendaciones(e){
   return recs;
 }
 
-/* ============ Estado ============ */
 let gradoActual = "Todos";
 let estudianteSel = null;
 let filtroPago = "Todos";
 const charts = {};
-
 function crearChart(id, config){
   if(charts[id]) charts[id].destroy();
   charts[id] = new Chart(document.getElementById(id), config);
@@ -412,7 +452,6 @@ Chart.defaults.font.family = "'Segoe UI','Helvetica Neue',Arial,sans-serif";
 Chart.defaults.color = "#5B6B60";
 Chart.defaults.borderColor = "#E2E7E0";
 
-/* Línea punteada del mínimo aprobatorio (3.0) */
 const lineaMinima = {
   id:"lineaMinima",
   afterDraw(chart, args, opts){
@@ -422,7 +461,7 @@ const lineaMinima = {
     if(!eje) return;
     const pos = eje.getPixelForValue(opts.valor);
     ctx.save();
-    ctx.strokeStyle = "#B3362B"; ctx.setLineDash([5,4]); ctx.lineWidth = 1.5;
+    ctx.strokeStyle = "#B3362B"; ctx.setLineDash([5,4]); ctx.lineWidth = 1.4;
     ctx.beginPath();
     if(opts.eje==="x"){ ctx.moveTo(pos, chartArea.top); ctx.lineTo(pos, chartArea.bottom); }
     else { ctx.moveTo(chartArea.left, pos); ctx.lineTo(chartArea.right, pos); }
@@ -431,8 +470,83 @@ const lineaMinima = {
 };
 Chart.register(lineaMinima);
 
+const PALETA = ["#1E6E45","#2F6B8E","#B97417","#7B5EA7","#B3362B","#3E8E7E"];
+
 /* ============================================================
-   PESTAÑA ACADÉMICA
+   RESUMEN GENERAL
+   ============================================================ */
+function conEstadoPago(){
+  return ESTUDIANTES.map(e=>{
+    const deuda = mesesDeuda(e);
+    return {...e, deuda,
+      estado: deuda===0?"Al día":deuda<=2?"Atrasado":"Mora crítica",
+      valor: deuda*VALOR_MES};
+  });
+}
+
+function renderResumen(){
+  const pagosL = conEstadoPago();
+  const promedio = r1(prom(ESTUDIANTES.map(promEst)));
+  const riesgo = ESTUDIANTES.filter(e=>enRiesgo(e).length>0).length;
+  const vencida = pagosL.reduce((a,e)=>a+e.valor,0);
+  const alDia = pagosL.filter(e=>e.deuda===0).length;
+  const stockBajo = UNIFORMES.filter(u=>u.bodega<u.minimo).length;
+  document.getElementById("kpis-resumen").innerHTML =
+    `<div class="card kpi verde"><div class="etiqueta">Promedio institucional</div><div class="valor">${promedio.toFixed(1)}</div><div class="detalle">${ESTUDIANTES.length} estudiantes · P1–P3</div></div>` +
+    `<div class="card kpi rojo"><div class="etiqueta">En riesgo académico</div><div class="valor">${riesgo}</div><div class="detalle">Con materias bajo 3.0</div></div>` +
+    `<div class="card kpi rojo"><div class="etiqueta">Cartera vencida</div><div class="valor">${cop(vencida)}</div><div class="detalle">${pagosL.length-alDia} familias con saldo</div></div>` +
+    `<div class="card kpi verde"><div class="etiqueta">Familias al día</div><div class="valor">${Math.round(alDia/pagosL.length*100)}%</div><div class="detalle">${alDia} de ${pagosL.length}</div></div>` +
+    `<div class="card kpi ambar"><div class="etiqueta">Stock bajo</div><div class="valor">${stockBajo}</div><div class="detalle">Referencias por reponer</div></div>`;
+
+  const datasets = GRADOS.map((g,gi)=>({
+    label:g,
+    data:PERIODOS.map((_,i)=>r1(prom(ESTUDIANTES.filter(e=>e.grado===g).map(e=>prom(MATERIAS.map(m=>e.notas[m][i])))))),
+    borderColor:PALETA[gi], backgroundColor:PALETA[gi],
+    borderWidth:2, pointRadius:3, tension:.35,
+  }));
+  crearChart("ch-res-evolucion",{
+    type:"line", data:{labels:PERIODOS, datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:"bottom",labels:{boxWidth:11,font:{size:10.5}}},lineaMinima:{valor:3,eje:"y"}},
+      scales:{y:{min:2,max:5}}}
+  });
+
+  const rec = MESES.map((_,i)=>pagosL.filter(e=>e.pagos[i].estado==="pagado").length*VALOR_MES);
+  const pen = MESES.map((_,i)=>pagosL.filter(e=>e.pagos[i].estado==="pendiente").length*VALOR_MES);
+  crearChart("ch-res-recaudo",{
+    type:"bar",
+    data:{labels:MESES.map(m=>m.slice(0,3)),datasets:[
+      {label:"Recaudado",data:rec,backgroundColor:"#1E6E45"},
+      {label:"Pendiente",data:pen,backgroundColor:"#B3362B",borderRadius:{topLeft:6,topRight:6}},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{boxWidth:12,font:{size:10.5}}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+": "+cop(c.raw)}}},
+      scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>"$"+(v/1e6).toFixed(1)+"M"}}}}
+  });
+
+  const feed = [];
+  ESTUDIANTES.forEach(e=>{
+    const r = enRiesgo(e);
+    if(r.length>=2) feed.push({orden:1,html:`<button class="alerta-item roja" onclick="abrirFicha(${e.id})">🎓 <strong>${e.nombre}</strong> (${e.grado}) pierde ${r.length} materias <span class="derecha" style="font-size:11px;color:var(--tinta-suave)">Ver ficha →</span></button>`});
+  });
+  conEstadoPago().filter(e=>e.deuda>=4).forEach(e=>{
+    feed.push({orden:1,html:`<div class="alerta-item roja">💰 <strong>${e.nombre}</strong> (${e.grado}) acumula ${e.deuda} meses en mora <span class="derecha" style="font-weight:800;color:var(--rojo)">${cop(e.valor)}</span></div>`});
+  });
+  ESTUDIANTES.forEach(e=>{
+    const r = enRiesgo(e);
+    if(r.length===1) feed.push({orden:2,html:`<button class="alerta-item ambar" onclick="abrirFicha(${e.id})">🎓 <strong>${e.nombre}</strong> (${e.grado}) en riesgo en ${r[0]} <span class="derecha" style="font-size:11px;color:var(--tinta-suave)">Ver ficha →</span></button>`});
+  });
+  UNIFORMES.filter(u=>u.bodega<u.minimo).forEach(u=>{
+    feed.push({orden:2,html:`<div class="alerta-item ambar">📦 <strong>${u.item}</strong>: quedan ${u.bodega} unidades (mínimo ${u.minimo}) — programar reposición</div>`});
+  });
+  document.getElementById("feed-alertas").innerHTML =
+    feed.sort((a,b)=>a.orden-b.orden).slice(0,9).map(f=>f.html).join("") ||
+    '<p style="margin:0;font-size:13px;color:var(--tinta-suave)">Sin alertas activas.</p>';
+}
+
+/* ============================================================
+   ACADÉMICO
    ============================================================ */
 function listaFiltrada(){
   return ESTUDIANTES.filter(e=>gradoActual==="Todos"||e.grado===gradoActual);
@@ -450,74 +564,73 @@ function renderFiltrosGrado(){
   });
 }
 
-function kpiHTML(icono, fondoIcono, label, valor, detalle){
-  return `<div class="card kpi">
-    <div class="icono" style="background:${fondoIcono}">${icono}</div>
-    <div><div class="etiqueta">${label}</div><div class="valor">${valor}</div>
-    <div class="detalle">${detalle}</div></div></div>`;
-}
-
 function renderKpisAcademico(){
   const lista = listaFiltrada();
   const pg = r1(prom(lista.map(promEst)));
   const riesgo = lista.filter(e=>enRiesgo(e).length>0).length;
   const aprob = Math.round(lista.filter(e=>enRiesgo(e).length===0).length/lista.length*100);
-  const ambito = gradoActual==="Todos" ? "Todos los grados · P1–P3" : `Grado ${gradoActual} · P1–P3`;
+  const ambito = gradoActual==="Todos" ? "Todos los grados" : `Grado ${gradoActual}`;
   document.getElementById("kpis-academico").innerHTML =
-    kpiHTML("🎓","var(--verde-claro)","Promedio general",pg.toFixed(1),ambito) +
-    kpiHTML("👥","var(--verde-claro)","Estudiantes",lista.length,"Matriculados activos") +
-    kpiHTML("⚠️","var(--rojo-claro)","En riesgo de perder",riesgo,"Con al menos una materia &lt; 3.0") +
-    kpiHTML("✅","var(--verde-claro)","Sin materias perdidas",aprob+"%","Del grupo filtrado");
+    `<div class="card kpi verde"><div class="etiqueta">Promedio</div><div class="valor">${pg.toFixed(1)}</div><div class="detalle">${ambito} · P1–P3</div></div>` +
+    `<div class="card kpi azul"><div class="etiqueta">Estudiantes</div><div class="valor">${lista.length}</div><div class="detalle">Matriculados activos</div></div>` +
+    `<div class="card kpi rojo"><div class="etiqueta">En riesgo</div><div class="valor">${riesgo}</div><div class="detalle">Con materias bajo 3.0</div></div>` +
+    `<div class="card kpi verde"><div class="etiqueta">Sin materias perdidas</div><div class="valor">${aprob}%</div><div class="detalle">Del grupo filtrado</div></div>`;
+}
+
+function colorHeat(p){
+  if(p < 3.0)  return {bg:"#FBE9E6", fg:"#B3362B"};
+  if(p < 3.4)  return {bg:"#FBF1DF", fg:"#9A6112"};
+  if(p < 3.8)  return {bg:"#E8F0F5", fg:"#2F6B8E"};
+  if(p < 4.2)  return {bg:"#E3F0E8", fg:"#1E6E45"};
+  return {bg:"#CDE8D8", fg:"#0D3B25"};
+}
+
+function renderHeatmap(){
+  const t = document.getElementById("heatmap");
+  let html = "<thead><tr><th>Grado</th>" + MATERIAS.map(m=>`<th>${m}</th>`).join("") + "</tr></thead><tbody>";
+  GRADOS.forEach(g=>{
+    const grupo = ESTUDIANTES.filter(e=>e.grado===g);
+    html += `<tr class="clic ${gradoActual===g?"sel":""}" onclick="filtrarGrado('${g}')"><td style="font-weight:800;color:${gradoActual===g?"var(--verde)":"var(--tinta)"}">${g}</td>`;
+    MATERIAS.forEach(m=>{
+      const p = r1(prom(grupo.map(e=>prom(e.notas[m]))));
+      const c = colorHeat(p);
+      html += `<td><span class="celda" style="background:${c.bg};color:${c.fg}" title="${g} · ${m}: ${p.toFixed(1)}">${p.toFixed(1)}</span></td>`;
+    });
+    html += "</tr>";
+  });
+  t.innerHTML = html + "</tbody>";
+}
+function filtrarGrado(g){
+  gradoActual = (gradoActual===g) ? "Todos" : g;
+  estudianteSel = null;
+  renderAcademico();
 }
 
 function renderChartsAcademico(){
   const lista = listaFiltrada();
-
-  // Promedio por grado
-  const dataGrados = GRADOS.map(g=>r1(prom(ESTUDIANTES.filter(e=>e.grado===g).map(promEst))));
-  crearChart("ch-grados",{
-    type:"bar",
-    data:{labels:GRADOS,datasets:[{data:dataGrados,
-      backgroundColor:GRADOS.map(g=>gradoActual!=="Todos"&&g===gradoActual?"#0D3B25":"#1E6E45"),
-      borderRadius:6}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},lineaMinima:{valor:3,eje:"y"}},
-      scales:{y:{min:0,max:5}}}
-  });
-
-  // Progreso en el año: si se ve "Todos", una línea por grado para comparar
   document.getElementById("sub-evolucion").textContent =
-    gradoActual!=="Todos"
-      ? `Promedio por periodo académico · grado ${gradoActual}`
-      : "Promedio por periodo académico · una línea por grado";
-  const paleta = ["#1E6E45","#2F6B8E","#B97417","#7B5EA7","#B3362B","#3E8E7E"];
+    gradoActual!=="Todos" ? `Promedio por periodo · grado ${gradoActual}` : "Promedio por periodo · una línea por grado";
   let datasetsEvol;
   if(gradoActual==="Todos"){
     datasetsEvol = GRADOS.map((g,gi)=>({
       label:g,
-      data:PERIODOS.map((_,i)=>r1(prom(
-        ESTUDIANTES.filter(e=>e.grado===g).map(e=>prom(MATERIAS.map(m=>e.notas[m][i])))))),
-      borderColor:paleta[gi], backgroundColor:paleta[gi],
-      borderWidth:2.5, pointRadius:3.5, tension:0.35,
+      data:PERIODOS.map((_,i)=>r1(prom(ESTUDIANTES.filter(e=>e.grado===g).map(e=>prom(MATERIAS.map(m=>e.notas[m][i])))))),
+      borderColor:PALETA[gi], backgroundColor:PALETA[gi], borderWidth:2, pointRadius:3, tension:.35,
     }));
   } else {
     datasetsEvol = [{
       label:`Grado ${gradoActual}`,
       data:PERIODOS.map((_,i)=>r1(prom(lista.map(e=>prom(MATERIAS.map(m=>e.notas[m][i])))))),
-      borderColor:"#1E6E45", backgroundColor:"#1E6E45",
-      borderWidth:3, pointRadius:5, tension:0.35,
+      borderColor:"#1E6E45", backgroundColor:"#1E6E45", borderWidth:3, pointRadius:5, tension:.35,
     }];
   }
   crearChart("ch-evolucion",{
-    type:"line",
-    data:{labels:PERIODOS,datasets:datasetsEvol},
+    type:"line", data:{labels:PERIODOS, datasets:datasetsEvol},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:gradoActual==="Todos",position:"bottom",
-        labels:{boxWidth:12,font:{size:10.5}}},lineaMinima:{valor:3,eje:"y"}},
+      plugins:{legend:{display:gradoActual==="Todos",position:"bottom",labels:{boxWidth:11,font:{size:10.5}}},lineaMinima:{valor:3,eje:"y"}},
       scales:{y:{min:2,max:5}}}
   });
 
-  // Por materia (horizontal, ordenado)
   const dataMat = MATERIAS.map(m=>({m,p:r1(prom(lista.map(e=>prom(e.notas[m]))))})).sort((a,b)=>a.p-b.p);
   crearChart("ch-materias",{
     type:"bar",
@@ -525,46 +638,45 @@ function renderChartsAcademico(){
       backgroundColor:dataMat.map(d=>d.p<3?"#B3362B":d.p<3.5?"#B97417":"#1E6E45"),borderRadius:6}]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},lineaMinima:{valor:3,eje:"x"}},
-      scales:{x:{min:0,max:5}}}
+      scales:{x:{min:0,max:5},y:{ticks:{font:{size:10.5}}}}}
   });
 }
 
 function renderAlertasAcademicas(){
-  const cont = document.getElementById("alertas-academicas");
   const alertas = ESTUDIANTES.map(e=>({e,riesgo:enRiesgo(e),t:tendEst(e)}))
     .filter(a=>a.riesgo.length>0).sort((a,b)=>b.riesgo.length-a.riesgo.length);
-  cont.innerHTML = alertas.length===0 ? '<p style="margin:0;font-size:13px;color:var(--tinta-suave)">Sin alertas activas.</p>' :
+  document.getElementById("alertas-academicas").innerHTML = alertas.length===0 ?
+    '<p style="margin:0;font-size:13px;color:var(--tinta-suave)">Sin alertas activas.</p>' :
     alertas.map(({e,riesgo,t})=>`
-      <button class="alerta" onclick="abrirDetalle(${e.id})">
+      <button class="alerta-item roja" onclick="abrirFicha(${e.id})">
         <strong>${e.nombre}</strong>
         <span class="pill neutral">${e.grado}</span>
         ${riesgo.map(m=>`<span class="pill bad">${m} · ${r1(prom(e.notas[m])).toFixed(1)}</span>`).join("")}
-        ${t<-0.15?'<span class="tend" style="color:var(--rojo)">📉 en descenso</span>':""}
-        <span class="derecha" style="font-size:11.5px;color:var(--tinta-suave)">Ver detalle →</span>
+        ${t<-0.15?'<span class="tend" style="color:var(--rojo)">▼ en descenso</span>':""}
+        <span class="derecha" style="font-size:11px;color:var(--tinta-suave)">Ver ficha →</span>
       </button>`).join("");
 }
 
 function renderTablaEstudiantes(){
   document.getElementById("titulo-lista").textContent =
     "Estudiantes " + (gradoActual!=="Todos"?`de ${gradoActual}`:"(todos los grados)");
-  const tbody = document.querySelector("#tabla-estudiantes tbody");
-  tbody.innerHTML = listaFiltrada().map(e=>{
+  document.querySelector("#tabla-estudiantes tbody").innerHTML = listaFiltrada().map(e=>{
     const p = promEst(e), t = tendEst(e), r = enRiesgo(e).length;
-    const estado = r>0 ? `<span class="pill bad">${r} materia${r>1?"s":""} en riesgo</span>` :
-      enAlerta(e).length>0 ? '<span class="pill warn">En observación</span>' :
-      '<span class="pill ok">Al día</span>';
-    return `<tr class="clic ${estudianteSel===e.id?"sel":""}" onclick="abrirDetalle(${e.id})">
+    const estado = r>0 ? `<span class="pill bad">${r} en riesgo</span>` :
+      enAlerta(e).length>0 ? '<span class="pill warn">En observación</span>' : '<span class="pill ok">Estable</span>';
+    return `<tr class="clic ${estudianteSel===e.id?"sel":""}" onclick="abrirFicha(${e.id})">
       <td style="font-weight:600">${e.nombre}</td><td>${e.grado}</td>
-      <td style="font-weight:700;color:${colorNota(p)}">${p.toFixed(1)}</td>
+      <td style="font-weight:800;color:${colorNota(p)}">${p.toFixed(1)}</td>
       <td><span class="tend" style="color:${t>=0?"var(--verde)":"var(--rojo)"}">${t>=0?"▲":"▼"} ${(t>=0?"+":"")+t.toFixed(1)}</span></td>
       <td>${estado}</td></tr>`;
   }).join("");
 }
 
-function abrirDetalle(id){
+function abrirFicha(id){
   const e = ESTUDIANTES.find(x=>x.id===id);
   gradoActual = e.grado;
   estudianteSel = id;
+  irA("academico");
   renderAcademico();
   const det = document.getElementById("detalle-estudiante");
   det.classList.remove("oculto");
@@ -588,19 +700,17 @@ function renderDetalle(){
   pillProm.textContent = "Promedio "+p.toFixed(1);
   pillProm.className = "pill "+(p<3?"bad":p<3.5?"warn":"ok");
 
-  // Tabla de notas por materia y periodo
   document.querySelector("#det-notas tbody").innerHTML = MATERIAS.map(m=>{
     const acum = r1(prom(e.notas[m]));
     const estado = acum<3 ? '<span class="pill bad">Riesgo de perder</span>' :
       acum<3.4 ? '<span class="pill warn">Atención</span>' : '<span class="pill ok">Aprobando</span>';
     return `<tr><td style="font-weight:600">${m}</td>
-      ${e.notas[m].map(n=>`<td style="font-weight:600;color:${colorNota(n)}">${n.toFixed(1)}</td>`).join("")}
+      ${e.notas[m].map(n=>`<td style="font-weight:700;color:${colorNota(n)}">${n.toFixed(1)}</td>`).join("")}
       <td style="font-weight:800;color:${colorNota(acum)}">${acum.toFixed(1)}</td><td>${estado}</td></tr>`;
   }).join("");
 
-  // Progreso vs. su grado, más las 2 materias extremas del estudiante
   document.getElementById("det-sub-evol").textContent =
-    `Promedio general, su mejor y su peor materia, frente al grado ${e.grado}`;
+    `Su promedio, su mejor y su peor materia, frente al grado ${e.grado}`;
   const propio = PERIODOS.map((_,i)=>r1(prom(MATERIAS.map(m=>e.notas[m][i]))));
   const delGrupo = PERIODOS.map((_,i)=>r1(prom(
     ESTUDIANTES.filter(x=>x.grado===e.grado).map(x=>prom(MATERIAS.map(m=>x.notas[m][i]))))));
@@ -615,11 +725,9 @@ function renderDetalle(){
       {label:`Peor: ${peor}`,data:e.notas[peor],borderColor:"#B3362B",borderWidth:1.5,pointRadius:2.5,tension:.35},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:"bottom",labels:{boxWidth:12,font:{size:10}}},lineaMinima:{valor:3,eje:"y"}},
+      plugins:{legend:{position:"bottom",labels:{boxWidth:11,font:{size:9.5}}},lineaMinima:{valor:3,eje:"y"}},
       scales:{y:{min:1,max:5}}}
   });
-
-  // Comparación por materia
   crearChart("ch-det-materias",{
     type:"bar",
     data:{labels:MATERIAS,datasets:[
@@ -627,11 +735,9 @@ function renderDetalle(){
       {label:"Grado",data:MATERIAS.map(m=>r1(prom(ESTUDIANTES.filter(x=>x.grado===e.grado).map(x=>prom(x.notas[m]))))),backgroundColor:"#C4D6CB",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{boxWidth:14,font:{size:11}}},lineaMinima:{valor:3,eje:"y"}},
-      scales:{y:{min:0,max:5},x:{ticks:{font:{size:9},maxRotation:45,minRotation:35}}}}
+      plugins:{legend:{labels:{boxWidth:12,font:{size:10.5}}},lineaMinima:{valor:3,eje:"y"}},
+      scales:{y:{min:0,max:5},x:{ticks:{font:{size:8.5},maxRotation:45,minRotation:35}}}}
   });
-
-  // Recomendaciones
   document.getElementById("det-recomendaciones").innerHTML = recomendaciones(e).map(r=>
     `<div class="rec ${r.tipo}"><span>${r.icono}</span><span>${r.texto}</span></div>`).join("");
 }
@@ -639,6 +745,7 @@ function renderDetalle(){
 function renderAcademico(){
   renderFiltrosGrado();
   renderKpisAcademico();
+  renderHeatmap();
   renderChartsAcademico();
   renderAlertasAcademicas();
   renderTablaEstudiantes();
@@ -646,39 +753,28 @@ function renderAcademico(){
 }
 
 /* ============================================================
-   PESTAÑA FINANZAS Y CARTERA
+   FINANZAS
    ============================================================ */
-function conEstadoPago(){
-  return ESTUDIANTES.map(e=>{
-    const deuda = mesesDeuda(e);
-    return {...e, deuda,
-      estado: deuda===0?"Al día":deuda<=2?"Atrasado":"Mora crítica",
-      valor: deuda*VALOR_MES};
-  });
-}
-
 function renderKpisFinanzas(){
   const lista = conEstadoPago();
   const alDia = lista.filter(e=>e.deuda===0).length;
-  const conDeuda = lista.length - alDia;
   const recaudado = lista.reduce((a,e)=>a+e.pagos.filter(p=>p.estado==="pagado").length*VALOR_MES,0);
   const vencida = lista.reduce((a,e)=>a+e.valor,0);
-  const stockBajo = UNIFORMES.filter(u=>u.bodega<u.minimo).length;
   document.getElementById("kpis-finanzas").innerHTML =
-    kpiHTML("💵","var(--verde-claro)","Recaudado en el año",cop(recaudado),"Febrero – junio 2026") +
-    kpiHTML("⚠️","var(--rojo-claro)","Cartera vencida",cop(vencida),`${conDeuda} familias con saldo pendiente`) +
-    kpiHTML("✅","var(--verde-claro)","Familias al día",Math.round(alDia/lista.length*100)+"%",`${alDia} de ${lista.length} estudiantes`) +
-    kpiHTML("📦","var(--ambar-claro)","Uniformes en bodega",UNIFORMES.reduce((a,u)=>a+u.bodega,0),`${stockBajo} referencias con stock bajo`);
+    `<div class="card kpi verde"><div class="etiqueta">Recaudado en el año</div><div class="valor">${cop(recaudado)}</div><div class="detalle">Febrero – junio 2026</div></div>` +
+    `<div class="card kpi rojo"><div class="etiqueta">Cartera vencida</div><div class="valor">${cop(vencida)}</div><div class="detalle">${lista.length-alDia} familias con saldo</div></div>` +
+    `<div class="card kpi verde"><div class="etiqueta">Familias al día</div><div class="valor">${Math.round(alDia/lista.length*100)}%</div><div class="detalle">${alDia} de ${lista.length} estudiantes</div></div>` +
+    `<div class="card kpi ambar"><div class="etiqueta">Mora crítica</div><div class="valor">${lista.filter(e=>e.deuda>2).length}</div><div class="detalle">Familias con 3+ meses</div></div>`;
 }
 
 function renderAlertasCobro(){
   const criticos = conEstadoPago().filter(e=>e.deuda>2).sort((a,b)=>b.deuda-a.deuda);
   document.getElementById("alertas-cobro").innerHTML = criticos.length===0 ?
     '<p style="margin:0;font-size:13px;color:var(--tinta-suave)">Sin casos críticos.</p>' :
-    criticos.map(e=>`<div class="alerta">
+    criticos.map(e=>`<div class="alerta-item roja">
       <strong>${e.nombre}</strong><span class="pill neutral">${e.grado}</span>
       <span class="pill bad">${e.deuda} meses en mora</span>
-      <span class="derecha" style="font-weight:800;color:var(--rojo);font-size:14px">${cop(e.valor)}</span>
+      <span class="derecha" style="font-weight:800;color:var(--rojo);font-size:13.5px">${cop(e.valor)}</span>
     </div>`).join("");
 }
 
@@ -691,11 +787,11 @@ function renderChartRecaudo(){
     data:{labels:MESES.map(m=>m.slice(0,3)),datasets:[
       {label:"Recaudado",data:rec,backgroundColor:"#1E6E45"},
       {label:"Pendiente",data:pen,backgroundColor:"#B3362B",borderRadius:{topLeft:6,topRight:6}},
-      {label:"Tendencia de recaudo",data:rec,type:"line",borderColor:"#0D3B25",
-        borderWidth:2,borderDash:[4,3],pointRadius:3,tension:.35,yAxisID:"y"},
+      {label:"Trayectoria del recaudo",data:rec,type:"line",borderColor:"#0D3B25",
+        borderWidth:2,borderDash:[4,3],pointRadius:3,tension:.35},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{boxWidth:14,font:{size:11}}},
+      plugins:{legend:{labels:{boxWidth:12,font:{size:10.5}}},
         tooltip:{callbacks:{label:c=>c.dataset.label+": "+cop(c.raw)}}},
       scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>"$"+(v/1e6).toFixed(1)+"M"}}}}
   });
@@ -725,30 +821,9 @@ function renderTablaPagos(){
       `<span class="pill bad">Mora crítica (${e.deuda}m)</span>`;
     return `<tr><td style="font-weight:600">${e.nombre}</td><td>${e.grado}</td>
       ${e.pagos.map(p=>`<td style="text-align:center"><span class="cuadro-pago" title="${p.mes}: ${p.estado}"
-        style="background:${p.estado==="pagado"?"#1E6E45":"#B3362B"};opacity:${p.estado==="pagado"?".85":"1"}"></span></td>`).join("")}
-      <td style="font-weight:700;color:${e.valor>0?"var(--rojo)":"var(--verde)"}">${e.valor>0?cop(e.valor):"—"}</td>
+        style="background:${p.estado==="pagado"?"#1E6E45":"#B3362B"}"></span></td>`).join("")}
+      <td style="font-weight:800;color:${e.valor>0?"var(--rojo)":"var(--verde)"}">${e.valor>0?cop(e.valor):"—"}</td>
       <td>${estado}</td></tr>`;
-  }).join("");
-}
-
-function renderUniformes(){
-  crearChart("ch-uniformes",{
-    type:"bar",
-    data:{labels:UNIFORMES.map(u=>u.item),datasets:[
-      {label:"Vendidos",data:UNIFORMES.map(u=>u.vendidos),backgroundColor:"#2F6B8E",borderRadius:4},
-      {label:"En bodega",data:UNIFORMES.map(u=>u.bodega),backgroundColor:"#1E6E45",borderRadius:4},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:"top",labels:{boxWidth:14,font:{size:11}}}},
-      scales:{x:{ticks:{font:{size:9},maxRotation:40,minRotation:30}}}}
-  });
-  document.querySelector("#tabla-uniformes tbody").innerHTML = UNIFORMES.map(u=>{
-    const estado = u.bodega<u.minimo ? '<span class="pill bad">Reponer ya</span>' :
-      u.bodega<u.minimo*1.5 ? '<span class="pill warn">Stock justo</span>' :
-      '<span class="pill ok">Suficiente</span>';
-    return `<tr><td style="font-weight:600">${u.item}</td>
-      <td style="text-align:right;font-weight:700;color:${u.bodega<u.minimo?"var(--rojo)":"var(--tinta)"}">${u.bodega}</td>
-      <td style="text-align:right;color:var(--tinta-suave)">${u.minimo}</td><td>${estado}</td></tr>`;
   }).join("");
 }
 
@@ -758,21 +833,65 @@ function renderFinanzas(){
   renderChartRecaudo();
   renderFiltrosPago();
   renderTablaPagos();
-  renderUniformes();
 }
 
-/* ============ Pestañas ============ */
-function cambiarTab(tab){
-  document.getElementById("tab-academico").classList.toggle("activa",tab==="academico");
-  document.getElementById("tab-finanzas").classList.toggle("activa",tab==="finanzas");
-  document.getElementById("vista-academico").style.display = tab==="academico"?"grid":"none";
-  document.getElementById("vista-finanzas").style.display = tab==="finanzas"?"grid":"none";
-  if(tab==="academico") renderAcademico(); else renderFinanzas();
+/* ============================================================
+   INVENTARIO
+   ============================================================ */
+function renderInventario(){
+  const totalVend = UNIFORMES.reduce((a,u)=>a+u.vendidos,0);
+  const totalBod = UNIFORMES.reduce((a,u)=>a+u.bodega,0);
+  const stockBajo = UNIFORMES.filter(u=>u.bodega<u.minimo);
+  document.getElementById("kpis-inventario").innerHTML =
+    `<div class="card kpi azul"><div class="etiqueta">Uniformes vendidos</div><div class="valor">${totalVend}</div><div class="detalle">Acumulado 2026</div></div>` +
+    `<div class="card kpi verde"><div class="etiqueta">Unidades en bodega</div><div class="valor">${totalBod}</div><div class="detalle">${UNIFORMES.length} referencias</div></div>` +
+    `<div class="card kpi rojo"><div class="etiqueta">Stock bajo</div><div class="valor">${stockBajo.length}</div><div class="detalle">Referencias por reponer</div></div>`;
+
+  crearChart("ch-uniformes",{
+    type:"bar",
+    data:{labels:UNIFORMES.map(u=>u.item),datasets:[
+      {label:"Vendidos",data:UNIFORMES.map(u=>u.vendidos),backgroundColor:"#2F6B8E",borderRadius:4},
+      {label:"En bodega",data:UNIFORMES.map(u=>u.bodega),backgroundColor:"#1E6E45",borderRadius:4},
+    ]},
+    options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:"top",labels:{boxWidth:12,font:{size:10.5}}}},
+      scales:{y:{ticks:{font:{size:10}}}}}
+  });
+  crearChart("ch-bodega",{
+    type:"doughnut",
+    data:{labels:UNIFORMES.map(u=>u.item),datasets:[{data:UNIFORMES.map(u=>u.bodega),
+      backgroundColor:["#1E6E45","#2F6B8E","#B97417","#7B5EA7","#B3362B","#3E8E7E"],
+      borderColor:"#FFFFFF",borderWidth:3}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:"58%",
+      plugins:{legend:{position:"right",labels:{boxWidth:11,font:{size:10}}}}}
+  });
+  document.querySelector("#tabla-uniformes tbody").innerHTML = UNIFORMES.map(u=>{
+    const estado = u.bodega<u.minimo ? '<span class="pill bad">Reponer ya</span>' :
+      u.bodega<u.minimo*1.5 ? '<span class="pill warn">Stock justo</span>' :
+      '<span class="pill ok">Suficiente</span>';
+    return `<tr><td style="font-weight:600">${u.item}</td>
+      <td style="text-align:right">${u.vendidos}</td>
+      <td style="text-align:right;font-weight:800;color:${u.bodega<u.minimo?"var(--rojo)":"var(--tinta)"}">${u.bodega}</td>
+      <td style="text-align:right;color:var(--tinta-suave)">${u.minimo}</td><td>${estado}</td></tr>`;
+  }).join("");
 }
 
-/* Arranque */
-renderAcademico();
+/* ============================================================
+   NAVEGACIÓN
+   ============================================================ */
+function irA(sec){
+  ["resumen","academico","finanzas","inventario"].forEach(s=>{
+    document.getElementById("sec-"+s).classList.toggle("visible", s===sec);
+    document.getElementById("nav-"+s).classList.toggle("activa", s===sec);
+  });
+  if(sec==="resumen") renderResumen();
+  if(sec==="academico") renderAcademico();
+  if(sec==="finanzas") renderFinanzas();
+  if(sec==="inventario") renderInventario();
+  window.scrollTo({top:0});
+}
 
+renderResumen();
 </script>
 </body>
 </html>
